@@ -2,15 +2,15 @@
 
 Using Python(Flask)
 
-## Introduce
-
-Quepis is a web application made of Python(Flask).It allows MC Server players to unban themselves by this web.
-
 Sometimes using JetBrains IDE like Pycharm is really like eating a huge smelly fuking shit.
 
 Please support VSCode and uninstall PyCharm.
 
 You will thank yourself.
+
+## Introduce
+
+Quepis is a web application made of Python(Flask).It allows MC Server players to unban themselves by this web.
 
 ## Usage
 
@@ -31,5 +31,6 @@ You will thank yourself.
 ## Contribution
 
 You can fork this project and modify it.And then open a Pull Resque.
+
 
 
