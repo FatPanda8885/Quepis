@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>自助解封</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Animated background particles */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%);
+      animation: float 15s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0px) rotate(0deg);
+      }
+
+      50% {
+        transform: translateY(-20px) rotate(180deg);
+      }
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 48px 40px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.1),
+        0 8px 16px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      z-index: 1;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .container:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 32px 64px rgba(0, 0, 0, 0.15),
+        0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .logo {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 28px;
+      color: white;
+      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    .notice-box {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border: 1px solid #f59e0b;
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: #92400e;
+      box-shadow: 0 4px 8px rgba(245, 158, 11, 0.1);
+    }
+
+    .notice-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .flash-box {
+      margin-bottom: 24px;
+      padding: 16px 20px;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .flash-box.success {
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+      border: 1px solid #10b981;
+      color: #065f46;
+    }
+
+    .flash-box.error {
+      background: linear-gradient(135deg, #fee2e2, #fecaca);
+      border: 1px solid #ef4444;
+      color: #991b1b;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+      font-size: 14px;
+      letter-spacing: -0.01em;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 400;
+      color: #1f2937;
+      background: rgba(255, 255, 255, 0.8);
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    input[type="text"]:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    input[type="text"]:hover {
+      border-color: #d1d5db;
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
+      font-size: 20px;
+      pointer-events: none;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 16px 24px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .submit-btn:hover::before {
+      left: 100%;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .loading {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: white;
+    }
+
+    .loading-spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top: 2px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .footer p {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 480px) {
+      .container {
+        padding: 32px 24px;
+        border-radius: 20px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .logo {
+        width: 56px;
+        height: 56px;
+        font-size: 24px;
+      }
+
+      input[type="text"],
+      .submit-btn {
+        padding: 14px 16px;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">🔍</div>
+      <h1>自助解封</h1>
+      <p class="subtitle">输入您的游戏ID或UUID进行查询</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+      <div class="flash-box {{ category }}">
+        <span>{% if category == 'success' %}✅{% else %}❌{% endif %}</span>
+        <span>{{ message }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="notice-box">
+      <span class="notice-icon">💡</span>
+      <span>仅支持特定原因的封禁自助解封，滥用将受处罚</span>
+    </div>
+
+    <form method="POST" action="/" id="queryForm">
+      <div class="form-group">
+        <label for="user_input">用户名</label>
+        <div class="input-wrapper">
+          <input type="text" id="user_input" name="user_input" placeholder="请输入用户名" autocomplete="off">
+          <span class="input-icon">👤</span>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">
+        <span class="btn-text">查询用户</span>
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <span>查询中...</span>
+        </div>
+      </button>
+    </form>
+
+    <div class="footer">
+      <p>© 2026 ICP备号</p>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('queryForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = submitBtn.querySelector('.btn-text');
+    const loading = submitBtn.querySelector('.loading');
+    const input = document.getElementById('user_input');
+
+    form.addEventListener('submit', function (e) {
+      const userInput = input.value.trim();
+
+      if (!userInput) {
+        e.preventDefault();
+
+        // Add shake animation
+        input.style.animation = 'shake 0.5s ease-in-out';
+        input.focus();
+
+        setTimeout(() => {
+          input.style.animation = '';
+        }, 500);
+
+        return;
+      }
+
+      // Show loading state
+      submitBtn.disabled = true;
+      btnText.style.display = 'none';
+      loading.style.display = 'flex';
+    });
+
+    // Add shake animation keyframes
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Auto-focus input on page load
+    window.addEventListener('load', () => {
+      input.focus();
+    });
+
+    // Add input validation styling
+    input.addEventListener('input', function () {
+      if (this.value.trim()) {
+        this.style.borderColor = '#10b981';
+      } else {
+        this.style.borderColor = '#e5e7eb';
+      }
+    });
+  </script>
+</body>
+
+</html>
